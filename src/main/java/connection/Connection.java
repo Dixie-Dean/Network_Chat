@@ -26,8 +26,9 @@ public class Connection {
     public synchronized void sendMessage(String message) {
         try {
             out.write(message);
+            out.flush();
         } catch (IOException exception) {
-            exception.printStackTrace();
+            System.out.println("Output exception: " + exception.getMessage()); //todo observer e.
         }
     }
 
@@ -37,6 +38,7 @@ public class Connection {
             socket.close();
         } catch (IOException exception) {
             exception.printStackTrace();
+            System.out.println("SocketConnection exception: " + exception.getMessage()); //todo observer e.
         }
     }
 }
