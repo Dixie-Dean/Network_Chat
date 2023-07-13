@@ -4,18 +4,23 @@ import java.io.*;
 import java.net.Socket;
 
 public class Connection {
-    private Socket socket;
-    private BufferedReader in;
-    private BufferedWriter out;
-    private Thread thread;
+    private final Socket socket;
+    private final BufferedReader in;
+    private final BufferedWriter out;
+    private Thread thread = null;
+    private final ConnectionObserver observer;
 
-    public Connection(Socket socket) throws IOException {
+    public Connection(ConnectionObserver observer, Socket socket) throws IOException {
+        this.observer = observer;
         this.socket = socket;
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         thread = new Thread(() -> {
             try {
-                in.readLine();
+                observer.connectionEstablished(this);
+                while (!thread.isInterrupted()) {
+                    observer.messageReceived(this, in.readLine());
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -28,7 +33,7 @@ public class Connection {
             out.write(message);
             out.flush();
         } catch (IOException exception) {
-            System.out.println("Output exception: " + exception.getMessage()); //todo observer e.
+            observer.exceptionOccurred(this, exception);
         }
     }
 
@@ -38,7 +43,12 @@ public class Connection {
             socket.close();
         } catch (IOException exception) {
             exception.printStackTrace();
-            System.out.println("SocketConnection exception: " + exception.getMessage()); //todo observer e.
+            observer.exceptionOccurred(this, exception);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Connection: " + socket.getInetAddress() + " : " + socket.getPort();
     }
 }
