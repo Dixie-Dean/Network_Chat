@@ -15,6 +15,7 @@ public class Server implements ConnectionObserver {
     private final LinkedList<Connection> connections = new LinkedList<>();
 
     private Server() {
+        System.out.println("Server is running...");
         try (ServerSocket serverSocket = new ServerSocket(8088)) {
             while (true) {
                 new Connection(this, serverSocket.accept());

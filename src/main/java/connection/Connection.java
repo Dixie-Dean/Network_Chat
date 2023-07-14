@@ -28,12 +28,17 @@ public class Connection {
         thread.start();
     }
 
+    public Connection(ConnectionObserver observer, String ip, int port) throws IOException {
+        this(observer, new Socket(ip, port));
+    }
+
     public synchronized void sendMessage(String message) {
         try {
-            out.write(message);
+            out.write(message  + "\r\n");
             out.flush();
         } catch (IOException exception) {
             observer.exceptionOccurred(this, exception);
+            disconnect();
         }
     }
 
@@ -42,7 +47,6 @@ public class Connection {
         try {
             socket.close();
         } catch (IOException exception) {
-            exception.printStackTrace();
             observer.exceptionOccurred(this, exception);
         }
     }
