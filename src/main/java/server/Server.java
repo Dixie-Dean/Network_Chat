@@ -38,13 +38,13 @@ public class Server implements ConnectionObserver {
     @Override
     public void connectionEstablished(Connection connection) {
         connections.add(connection);
-        distribute(connection + " entered!");
+        distribute("Client connected: " + connection);
     }
 
     @Override
     public void disconnection(Connection connection) {
         connections.remove(connection);
-        distribute(connection + " left!");
+        distribute("Client disconnected: " + connection);
     }
 
     private void distribute(String message) {

@@ -44,6 +44,7 @@ public class Connection {
 
     public synchronized void disconnect() {
         thread.interrupt();
+        observer.disconnection(this);
         try {
             socket.close();
         } catch (IOException exception) {
