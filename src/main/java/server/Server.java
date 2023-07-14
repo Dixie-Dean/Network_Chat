@@ -32,7 +32,7 @@ public class Server implements ConnectionObserver {
 
     @Override
     public void exceptionOccurred(Connection connection, Exception exception) {
-        System.out.println("Connection exception: " + connection + " | " + exception.getMessage());
+        System.out.println("[S]Connection exception: " + connection + " | " + exception.getMessage());
     }
 
     @Override

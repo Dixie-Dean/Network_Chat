@@ -7,7 +7,7 @@ public class Connection {
     private final Socket socket;
     private final BufferedReader in;
     private final BufferedWriter out;
-    private Thread thread = null;
+    private Thread thread;
     private final ConnectionObserver observer;
 
     public Connection(ConnectionObserver observer, Socket socket) throws IOException {
