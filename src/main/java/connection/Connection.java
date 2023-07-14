@@ -28,10 +28,6 @@ public class Connection {
         thread.start();
     }
 
-    public Connection(ConnectionObserver observer, String ip, int port) throws IOException {
-        this(observer, new Socket(ip, port));
-    }
-
     public synchronized void sendMessage(String message) {
         try {
             out.write(message  + "\r\n");

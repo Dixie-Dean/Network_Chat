@@ -21,7 +21,7 @@ public class Server implements ConnectionObserver {
                 new Connection(this, serverSocket.accept());
             }
         } catch (IOException exception) {
-            System.out.println("ServerSocket exception: " + exception.getMessage());
+            System.out.println("Server IOException: " + exception.getMessage());
         }
     }
 
@@ -38,13 +38,17 @@ public class Server implements ConnectionObserver {
     @Override
     public void connectionEstablished(Connection connection) {
         connections.add(connection);
-        distribute("Client connected: " + connection);
+        System.out.println("Client connected: " + connection);
+        System.out.println("Clients on server: " + connections.size());
+        distribute("Clients on server: " + connections.size());
     }
 
     @Override
     public void disconnection(Connection connection) {
         connections.remove(connection);
-        distribute("Client disconnected: " + connection);
+        System.out.println("Client disconnected: " + connection);
+        System.out.println("Clients on server: " + connections.size());
+        distribute("Clients on server: " + connections.size());
     }
 
     private void distribute(String message) {
