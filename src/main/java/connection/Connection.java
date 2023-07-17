@@ -50,6 +50,6 @@ public class Connection {
 
     @Override
     public String toString() {
-        return "Connection: " + socket.getInetAddress() + " : " + socket.getPort();
+        return socket.getInetAddress() + " - " + socket.getPort();
     }
 }

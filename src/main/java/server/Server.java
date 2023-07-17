@@ -38,16 +38,14 @@ public class Server implements ConnectionObserver {
     @Override
     public void connectionEstablished(Connection connection) {
         connections.add(connection);
-        System.out.println("Client connected: " + connection);
-        System.out.println("Clients on server: " + connections.size());
+        System.out.println("Client connected: " + connection + " | Clients on server: " + connections.size());
         distribute("Clients on server: " + connections.size());
     }
 
     @Override
     public void disconnection(Connection connection) {
         connections.remove(connection);
-        System.out.println("Client disconnected: " + connection);
-        System.out.println("Clients on server: " + connections.size());
+        System.out.println("Client disconnected: " + connection + " | Clients on server: " + connections.size());
         distribute("Clients on server: " + connections.size());
     }
 

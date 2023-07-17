@@ -8,28 +8,22 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Client implements ConnectionObserver {
-    private static Thread thread;
-
-    public static void main(String[] args) {
-        thread = new Thread(Client::new);
-        thread.start();
-    }
-
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final String HOST = "192.168.1.64";
     private static final int PORT = 8088;
+    private static Thread thread;
+    private static String username;
     private Connection connection;
-    private static String username = null;
-
     private Client() {
         try {
-           connection = new Connection(this, new Socket(HOST, PORT));
-           Thread.sleep(10);
+            connection = new Connection(this, new Socket(HOST, PORT));
+            Thread.sleep(10);
             while (!thread.isInterrupted()) {
+
                 if (username == null) {
                     System.out.print("Enter your username: ");
                     username = SCANNER.nextLine();
-                    System.out.println("Username approved, you may proceed.");
+                    System.out.println("Username confirmed!");
                 }
 
                 String message = SCANNER.nextLine();
@@ -37,7 +31,7 @@ public class Client implements ConnectionObserver {
                     disconnection(connection);
                     connection.disconnect();
                 } else {
-                    connection.sendMessage(username + " - " + message);
+                    connection.sendMessage(username + ": " + message);
                 }
             }
         } catch (IOException exception) {
@@ -47,9 +41,18 @@ public class Client implements ConnectionObserver {
         }
     }
 
+    public static void main(String[] args) {
+        thread = new Thread(Client::new);
+        thread.start();
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
     @Override
     public void messageReceived(Connection connection, String message) {
-        System.out.println("Message from " + connection + " | " + message);
+        System.out.println(message);
     }
 
     @Override
@@ -59,11 +62,11 @@ public class Client implements ConnectionObserver {
 
     @Override
     public void connectionEstablished(Connection connection) {
-        System.out.println("Client connected: " + connection);
+        System.out.println("Welcome to chat!");
     }
 
     @Override
     public void disconnection(Connection connection) {
-        System.out.println("Client disconnected: " + connection);
+        System.out.println("Goodbye!");
     }
 }
