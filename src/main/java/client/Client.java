@@ -19,20 +19,31 @@ public class Client implements ConnectionObserver {
     private static final String HOST = "192.168.1.64";
     private static final int PORT = 8088;
     private Connection connection;
+    private static String username = null;
 
     private Client() {
         try {
            connection = new Connection(this, new Socket(HOST, PORT));
-           while (!thread.isInterrupted()) {
-               String message = SCANNER.nextLine();
-               if (message.equals("/exit")) {
-                   disconnection(connection);
-                   connection.disconnect();
-               }
-               connection.sendMessage(message);
-           }
+           Thread.sleep(10);
+            while (!thread.isInterrupted()) {
+                if (username == null) {
+                    System.out.print("Enter your username: ");
+                    username = SCANNER.nextLine();
+                    System.out.println("Username approved, you may proceed.");
+                }
+
+                String message = SCANNER.nextLine();
+                if (message.equals("/exit")) {
+                    disconnection(connection);
+                    connection.disconnect();
+                } else {
+                    connection.sendMessage(username + " - " + message);
+                }
+            }
         } catch (IOException exception) {
             exceptionOccurred(connection, exception);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
