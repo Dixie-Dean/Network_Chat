@@ -13,3 +13,4 @@ target/
 *.zip
 *.tar.gz
 *.rar
+/src/main/java/settings/settings.txt

@@ -2,27 +2,34 @@ package server;
 
 import connection.Connection;
 import connection.ConnectionObserver;
+import settings.SettingsConfigurator;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.LinkedList;
+import java.util.Scanner;
 
-public class Server implements ConnectionObserver {
-    public static void main(String[] args) {
-        new Server();
-    }
-
+public class Server extends SettingsConfigurator implements ConnectionObserver {
     private final LinkedList<Connection> connections = new LinkedList<>();
+    private static final Scanner SCANNER = new Scanner(System.in);
 
-    private Server() {
-        System.out.println("Server is running...");
-        try (ServerSocket serverSocket = new ServerSocket(8088)) {
+    public Server() {
+        System.out.print("Enter port number: ");
+        writePort(Integer.parseInt(SCANNER.nextLine()));
+        writeHost();
+
+        try (ServerSocket serverSocket = new ServerSocket(readPort())) {
+            System.out.println("Server is running...");
             while (true) {
                 new Connection(this, serverSocket.accept());
             }
         } catch (IOException exception) {
             System.out.println("Server IOException: " + exception.getMessage());
         }
+    }
+
+    public static void main(String[] args) {
+        new Server();
     }
 
     @Override

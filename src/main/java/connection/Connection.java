@@ -7,8 +7,8 @@ public class Connection {
     private final Socket socket;
     private final BufferedReader in;
     private final BufferedWriter out;
-    private Thread thread;
     private final ConnectionObserver observer;
+    private Thread thread;
 
     public Connection(ConnectionObserver observer, Socket socket) throws IOException {
         this.observer = observer;
@@ -30,7 +30,7 @@ public class Connection {
 
     public synchronized void sendMessage(String message) {
         try {
-            out.write(message  + "\r\n");
+            out.write(message + "\r\n");
             out.flush();
         } catch (IOException exception) {
             observer.exceptionOccurred(this, exception);

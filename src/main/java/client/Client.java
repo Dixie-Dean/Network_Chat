@@ -2,21 +2,21 @@ package client;
 
 import connection.Connection;
 import connection.ConnectionObserver;
+import settings.SettingsHandler;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client implements ConnectionObserver {
+public class Client extends SettingsHandler implements ConnectionObserver {
     private static final Scanner SCANNER = new Scanner(System.in);
-    private static final String HOST = "192.168.1.64";
-    private static final int PORT = 8088;
     private static Thread thread;
     private static String username;
     private Connection connection;
+
     private Client() {
         try {
-            connection = new Connection(this, new Socket(HOST, PORT));
+            connection = new Connection(this, new Socket(readHost(), readPort()));
             Thread.sleep(10);
             while (!thread.isInterrupted()) {
 
