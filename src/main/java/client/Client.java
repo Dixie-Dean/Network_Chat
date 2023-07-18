@@ -50,13 +50,13 @@ public class Client extends SettingsHandler implements ConnectionObserver {
     }
 
     @Override
-    public void messageReceived(Connection connection, String message) {
+    public void messageReceived(String message) {
         System.out.println(message);
     }
 
     @Override
     public void exceptionOccurred(Connection connection, Exception exception) {
-        System.out.println("[C]Connection exception: " + connection + " | " + exception.getMessage());
+        System.out.println("Connection exception: " + connection + " | " + exception.getMessage());
     }
 
     @Override

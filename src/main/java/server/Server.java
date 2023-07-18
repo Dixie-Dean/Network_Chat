@@ -31,7 +31,7 @@ public class Server extends SettingsConfigurator implements ConnectionObserver {
     }
 
     @Override
-    public void messageReceived(Connection connection, String message) {
+    public void messageReceived(String message) {
         distribute(message);
     }
 

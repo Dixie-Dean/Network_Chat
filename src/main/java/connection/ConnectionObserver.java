@@ -1,7 +1,7 @@
 package connection;
 
 public interface ConnectionObserver {
-    void messageReceived(Connection connection, String message);
+    void messageReceived(String message);
 
     void exceptionOccurred(Connection connection, Exception exception);
 

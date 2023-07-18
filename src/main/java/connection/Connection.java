@@ -19,7 +19,7 @@ public class Connection {
             try {
                 observer.connectionEstablished(this);
                 while (!communicationThread.isInterrupted()) {
-                    observer.messageReceived(this, in.readLine());
+                    observer.messageReceived(in.readLine());
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -50,6 +50,6 @@ public class Connection {
 
     @Override
     public String toString() {
-        return socket.getLocalAddress() + " | " + socket.getPort();
+        return "" + socket.getPort();
     }
 }
