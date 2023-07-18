@@ -10,22 +10,28 @@ import java.util.Scanner;
 
 public class Client extends SettingsHandler implements ConnectionObserver {
     private static final Scanner SCANNER = new Scanner(System.in);
-    private static Thread thread;
-    private static String username;
+    private static final String EXIT = "/exit";
+    private static final String SETTINGS = "/settings";
+    private static Thread clientThread;
+    private String username;
     private Connection connection;
 
     private Client() {
         setUsername();
         try {
             connection = new Connection(this, new Socket(readHost(), readPort()));
-            while (!thread.isInterrupted()) {
+            while (!clientThread.isInterrupted()) {
                 String message = SCANNER.nextLine();
-                if (message.equals("/exit")) {
-                    disconnection(connection);
-                    connection.disconnect();
-                } else {
-                    connection.sendMessage(username + ": " + message);
+
+                switch (message) {
+                    case EXIT -> {
+                        disconnection(connection);
+                        connection.disconnect();
+                    }
+                    case SETTINGS -> displaySettings();
+                    default -> connection.sendMessage(username + ": " + message);
                 }
+
             }
         } catch (IOException exception) {
             exceptionOccurred(connection, exception);
@@ -33,8 +39,8 @@ public class Client extends SettingsHandler implements ConnectionObserver {
     }
 
     public static void main(String[] args) {
-        thread = new Thread(Client::new);
-        thread.start();
+        clientThread = new Thread(Client::new);
+        clientThread.start();
     }
 
     private void setUsername() {
@@ -55,11 +61,11 @@ public class Client extends SettingsHandler implements ConnectionObserver {
 
     @Override
     public void connectionEstablished(Connection connection) {
-        System.out.println("Welcome to chat!");
+        System.out.printf("Welcome to chat, %s!\n", username);
     }
 
     @Override
     public void disconnection(Connection connection) {
-        System.out.println("Goodbye!");
+        System.out.printf("Goodbye, %s!", username);
     }
 }

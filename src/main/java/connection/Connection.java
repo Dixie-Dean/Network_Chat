@@ -8,24 +8,24 @@ public class Connection {
     private final BufferedReader in;
     private final BufferedWriter out;
     private final ConnectionObserver observer;
-    private Thread thread;
+    private Thread communicationThread;
 
     public Connection(ConnectionObserver observer, Socket socket) throws IOException {
         this.observer = observer;
         this.socket = socket;
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        thread = new Thread(() -> {
+        communicationThread = new Thread(() -> {
             try {
                 observer.connectionEstablished(this);
-                while (!thread.isInterrupted()) {
+                while (!communicationThread.isInterrupted()) {
                     observer.messageReceived(this, in.readLine());
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
-        thread.start();
+        communicationThread.start();
     }
 
     public synchronized void sendMessage(String message) {
@@ -39,7 +39,7 @@ public class Connection {
     }
 
     public synchronized void disconnect() {
-        thread.interrupt();
+        communicationThread.interrupt();
         observer.disconnection(this);
         try {
             socket.close();
