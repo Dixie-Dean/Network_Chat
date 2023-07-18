@@ -15,17 +15,10 @@ public class Client extends SettingsHandler implements ConnectionObserver {
     private Connection connection;
 
     private Client() {
+        setUsername();
         try {
             connection = new Connection(this, new Socket(readHost(), readPort()));
-            Thread.sleep(10);
             while (!thread.isInterrupted()) {
-
-                if (username == null) {
-                    System.out.print("Enter your username: ");
-                    username = SCANNER.nextLine();
-                    System.out.println("Username confirmed!");
-                }
-
                 String message = SCANNER.nextLine();
                 if (message.equals("/exit")) {
                     disconnection(connection);
@@ -36,8 +29,6 @@ public class Client extends SettingsHandler implements ConnectionObserver {
             }
         } catch (IOException exception) {
             exceptionOccurred(connection, exception);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -46,8 +37,10 @@ public class Client extends SettingsHandler implements ConnectionObserver {
         thread.start();
     }
 
-    public String getUsername() {
-        return username;
+    private void setUsername() {
+        System.out.print("Enter your username: ");
+        username = SCANNER.nextLine();
+        System.out.println("Username confirmed!");
     }
 
     @Override
