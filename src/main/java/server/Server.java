@@ -10,13 +10,11 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Server extends SettingsConfigurator implements ConnectionObserver {
-    private final LinkedList<Connection> connections = new LinkedList<>();
     private static final Scanner SCANNER = new Scanner(System.in);
+    private final LinkedList<Connection> connections = new LinkedList<>();
 
     public Server() {
-        System.out.print("Enter port number: ");
-        writePort(Integer.parseInt(SCANNER.nextLine()));
-        writeHost();
+        configureSettings(SCANNER);
 
         try (ServerSocket serverSocket = new ServerSocket(readPort())) {
             System.out.println("Server is running...");

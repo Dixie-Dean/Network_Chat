@@ -2,11 +2,18 @@ package settings;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 public abstract class SettingsConfigurator extends SettingsHandler {
     private static final String HOST = "localhost";
 
-    protected void writePort(int port) {
+    protected void configureSettings(Scanner scanner) {
+        System.out.print("Enter port number: ");
+        writePort(Integer.parseInt(scanner.nextLine()));
+        writeHost();
+    }
+
+    private void writePort(int port) {
         try (FileWriter writer = new FileWriter(fileName)) {
             writer.write("Port | " + port + "\n");
         } catch (IOException exception) {
@@ -14,7 +21,7 @@ public abstract class SettingsConfigurator extends SettingsHandler {
         }
     }
 
-    protected void writeHost() {
+    private void writeHost() {
         try (FileWriter writer = new FileWriter(fileName, true)) {
             writer.write("Host | " + HOST + "\n");
         } catch (IOException exception) {
