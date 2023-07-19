@@ -15,11 +15,12 @@ public class Server extends SettingsConfigurator implements ConnectionObserver {
 
     public Server() {
         configureSettings(SCANNER);
-
         try (ServerSocket serverSocket = new ServerSocket(readPort())) {
             System.out.println("Server is running...");
-            while (true) {
-                new Connection(this, serverSocket.accept());
+
+            while (!serverSocket.isClosed()) {
+                Thread thread = new Thread(new Connection(this, serverSocket.accept()));
+                thread.start();
             }
         } catch (IOException exception) {
             System.out.println("Server IOException: " + exception.getMessage());
