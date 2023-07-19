@@ -12,7 +12,7 @@ public class Client extends SettingsHandler implements ConnectionObserver {
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final String EXIT = "/exit";
     private static final String SETTINGS = "/settings";
-    private static Thread clientThread;
+    private static Thread outputThread;
     private String username;
     private Connection connection;
 
@@ -20,16 +20,15 @@ public class Client extends SettingsHandler implements ConnectionObserver {
         setUsername();
         try {
             connection = new Connection(this, new Socket(readHost(), readPort()));
-            while (!clientThread.isInterrupted()) {
-                String message = SCANNER.nextLine();
-
-                switch (message) {
+            while (!outputThread.isInterrupted()) {
+                String messageToSend = SCANNER.nextLine();
+                switch (messageToSend) {
                     case EXIT -> {
-                        disconnection(connection);
                         connection.disconnect();
+                        outputThread.interrupt();
                     }
                     case SETTINGS -> displaySettings();
-                    default -> connection.sendMessage(username + ": " + message);
+                    default -> connection.sendMessage(username + ": " + messageToSend);
                 }
 
             }
@@ -38,15 +37,9 @@ public class Client extends SettingsHandler implements ConnectionObserver {
         }
     }
 
-    public static void main(String[] args) {
-        clientThread = new Thread(Client::new);
-        clientThread.start();
-    }
-
     private void setUsername() {
         System.out.print("Enter your username: ");
         username = SCANNER.nextLine();
-        System.out.println("Username confirmed!");
     }
 
     @Override
@@ -67,5 +60,10 @@ public class Client extends SettingsHandler implements ConnectionObserver {
     @Override
     public void disconnection(Connection connection) {
         System.out.printf("Goodbye, %s!", username);
+    }
+
+    public static void main(String[] args) {
+        outputThread = new Thread(Client::new);
+        outputThread.start();
     }
 }

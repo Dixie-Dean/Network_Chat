@@ -32,12 +32,14 @@ public class Server extends SettingsConfigurator implements ConnectionObserver {
 
     @Override
     public void messageReceived(String message) {
-        distribute(message);
+        if (message != null) {
+            distribute(message);
+        }
     }
 
     @Override
     public void exceptionOccurred(Connection connection, Exception exception) {
-        System.out.println("[S]Connection exception: " + connection + " | " + exception.getMessage());
+        System.out.println("Connection exception: " + connection + " | " + exception.getMessage());
     }
 
     @Override
