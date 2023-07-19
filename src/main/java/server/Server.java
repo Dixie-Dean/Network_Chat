@@ -22,6 +22,9 @@ public class Server extends SettingsConfigurator {
                 CLIENT_HANDLERS.add(clientHandler);
                 Thread thread = new Thread(clientHandler);
                 thread.start();
+
+
+                System.out.println("Connection established - " + clientHandler);
             }
         } catch (IOException exception) {
             System.out.println("Server IOException: " + exception.getMessage());
@@ -35,36 +38,4 @@ public class Server extends SettingsConfigurator {
     public static List<ClientHandler> getClientHandlersList() {
         return CLIENT_HANDLERS;
     }
-
-//    @Override
-//    public void messageReceived(String message) {
-//        if (message != null) {
-//            distribute(message);
-//        }
-//    }
-//
-//    @Override
-//    public void exceptionOccurred(Connection connection, Exception exception) {
-//        System.out.println("Connection exception: " + connection + " | " + exception.getMessage());
-//    }
-//
-//    @Override
-//    public void connectionEstablished(Connection connection) {
-//        connections.add(connection);
-//        System.out.println("Client connected: " + connection + " | Clients on server: " + connections.size());
-//        distribute("Clients on server: " + connections.size());
-//    }
-//
-//    @Override
-//    public void disconnection(Connection connection) {
-//        connections.remove(connection);
-//        System.out.println("Client disconnected: " + connection + " | Clients on server: " + connections.size());
-//        distribute("Clients on server: " + connections.size());
-//    }
-//
-//    private void distribute(String message) {
-//        for (Connection connection : connections) {
-//            connection.sendMessage(message);
-//        }
-//    }
 }

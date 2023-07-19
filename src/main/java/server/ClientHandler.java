@@ -5,8 +5,8 @@ import java.net.Socket;
 
 public class ClientHandler implements Runnable {
     private Socket socket;
-    private BufferedReader reader = null;
-    private BufferedWriter writer = null;
+    private BufferedReader reader;
+    private BufferedWriter writer;
     private String clientUsername;
 
     public ClientHandler(Socket socket) {
@@ -14,7 +14,7 @@ public class ClientHandler implements Runnable {
             this.socket = socket;
             this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            clientUsername = setClientName();
+            clientUsername = setClientUsername();
             distribute("SERVER: " + clientUsername + "has entered the chat!");
         } catch (IOException exception) {
             closeEverything(socket, reader, writer);
@@ -34,8 +34,12 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    private String setClientName() {
-        sendString("Enter your username, please: ");
+    @Override
+    public String toString() {
+        return "Port: " + socket.getPort() + " | Username: " + clientUsername;
+    }
+
+    private String setClientUsername() {
         try {
             return reader.readLine();
         } catch (IOException exception) {
@@ -66,11 +70,9 @@ public class ClientHandler implements Runnable {
             if (socket != null) {
                 socket.close();
             }
-
             if (reader != null) {
                 reader.close();
             }
-
             if (writer != null) {
                 writer.close();
             }
