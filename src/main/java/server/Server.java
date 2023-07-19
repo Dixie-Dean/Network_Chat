@@ -23,7 +23,6 @@ public class Server extends SettingsConfigurator {
                 Thread thread = new Thread(clientHandler);
                 thread.start();
 
-
                 System.out.println("Connection established - " + clientHandler);
             }
         } catch (IOException exception) {

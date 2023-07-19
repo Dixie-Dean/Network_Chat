@@ -22,6 +22,8 @@ public class Client extends SettingsHandler {
             this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             setUsername();
+            receiveMessage();
+            sendMessage();
         } catch (IOException exception) {
             closeEverything(socket, reader, writer);
         }
@@ -30,7 +32,7 @@ public class Client extends SettingsHandler {
     private void setUsername() {
         System.out.print("Enter your username, please: ");
         this.username = SCANNER.nextLine();
-        System.out.printf("Welcome to the chat, %s!", username);
+        System.out.printf("Welcome to the chat, %s!\n", username);
         try {
             writer.write(username);
             writer.newLine();
@@ -93,8 +95,7 @@ public class Client extends SettingsHandler {
     }
 
     public static void main(String[] args) {
-        Client client = new Client();
-        client.sendMessage();
-        client.receiveMessage();
+        Thread clientThread = new Thread(Client::new);
+        clientThread.start();
     }
 }
