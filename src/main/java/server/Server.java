@@ -4,6 +4,7 @@ import settings.SettingsConfigurator;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -35,20 +36,26 @@ public class Server extends SettingsConfigurator implements ClientHandlerObserve
         return CLIENT_HANDLERS;
     }
 
+    private String getTime() {
+        return LocalTime.now().getHour() + ":" +  LocalTime.now().getMinute() + ":" +  LocalTime.now().getSecond();
+    }
+
     @Override
     public void onMsgReceived(ClientHandler clientHandler, String msg) {
-        System.out.println(msg);
+        System.out.println(getTime() + " | " + msg);
     }
 
     @Override
     public void onConnection(ClientHandler clientHandler) {
         CLIENT_HANDLERS.add(clientHandler);
-        System.out.println(clientHandler + " has entered the chat! Clients on server: " + CLIENT_HANDLERS.size());
+        System.out.printf("%s | %s has entered the chat! Clients on server: %d\n",
+                getTime(), clientHandler, CLIENT_HANDLERS.size());
     }
 
     @Override
     public void onDisconnection(ClientHandler clientHandler) {
         CLIENT_HANDLERS.remove(clientHandler);
-        System.out.println(clientHandler + " has left the chat! Clients on server: " + CLIENT_HANDLERS.size());
+        System.out.printf("%s | %s has left the chat! Clients on server: %d\n",
+                getTime(), clientHandler, CLIENT_HANDLERS.size());
     }
 }

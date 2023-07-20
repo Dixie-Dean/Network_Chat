@@ -47,7 +47,7 @@ public class ClientHandler implements Runnable, Disconnection {
 
     @Override
     public String toString() {
-        return "(Port: " + socket.getPort() + ") | " + clientUsername;
+        return "Port: " + socket.getPort() + " | " + clientUsername;
     }
 
     private String setClientUsername() {
