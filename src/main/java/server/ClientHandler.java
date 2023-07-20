@@ -70,14 +70,9 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    private void disconnect() {
-        observer.onDisconnection(this);
-        distribute("SERVER: " + clientUsername + "has left the chat!");
-        closeEverything(socket, reader, writer);
-    }
-
     private void closeEverything(Socket socket, BufferedReader reader, BufferedWriter writer) {
-        disconnect();
+        observer.onDisconnection(this);
+        distribute("SERVER: " + clientUsername + " has left the chat!");
         try {
             if (socket != null) {
                 socket.close();
