@@ -22,8 +22,8 @@ public class Client extends SettingsHandler implements Disconnection {
             this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             setUsername();
-            receiveMessage();
-            sendMessage();
+            receiving();
+            sending();
         } catch (IOException exception) {
             disconnect(socket, reader, writer);
         }
@@ -33,40 +33,24 @@ public class Client extends SettingsHandler implements Disconnection {
         System.out.print("Enter your username, please: ");
         this.username = SCANNER.nextLine();
         System.out.printf("Welcome to the chat, %s!\n", username);
-        try {
-            writer.write(username);
-            writer.newLine();
-            writer.flush();
-        } catch (IOException exception) {
-            disconnect(socket, reader, writer);
-        }
+        sendMessage(username);
     }
 
-    private void sendMessage() {
+    private void sending() {
         socketLoop: while (socket.isConnected()) {
-            try {
-                String messageToSend = SCANNER.nextLine();
-                switch (messageToSend) {
-                    case SETTINGS -> displaySettings();
-
-                    case EXIT -> {
-                        exit(messageToSend);
-                        break socketLoop;
-                    }
-
-                    default -> {
-                        writer.write(username + ": " + messageToSend);
-                        writer.newLine();
-                        writer.flush();
-                    }
+            String messageToSend = SCANNER.nextLine();
+            switch (messageToSend) {
+                case SETTINGS -> displaySettings();
+                case EXIT -> {
+                    exit(messageToSend);
+                    break socketLoop;
                 }
-            } catch (IOException exception) {
-                disconnect(socket, reader, writer);
+                default -> sendMessage(username + ": " + messageToSend);
             }
         }
     }
 
-    private void receiveMessage() {
+    private void receiving() {
         new Thread(() -> {
             while (socket.isConnected()) {
                 try {
@@ -80,15 +64,19 @@ public class Client extends SettingsHandler implements Disconnection {
         }).start();
     }
 
-    private void exit(String exitMessage) {
+    private void sendMessage(String message) {
         try {
-            writer.write(exitMessage);
+            writer.write(message);
             writer.newLine();
             writer.flush();
-            disconnect(socket, reader, writer);
         } catch (IOException exception) {
             disconnect(socket, reader, writer);
         }
+    }
+
+    private void exit(String exitMessage) {
+        sendMessage(exitMessage);
+        disconnect(socket, reader, writer);
     }
 
     public static void main(String[] args) {
