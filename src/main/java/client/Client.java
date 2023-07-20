@@ -49,12 +49,11 @@ public class Client extends SettingsHandler {
                 switch (messageToSend) {
                     case SETTINGS -> displaySettings();
 
-                    case EXIT -> {
-                        closeEverything(socket, reader, writer);
-                    }
+                    case EXIT -> closeEverything(socket, reader, writer);
 
                     default -> {
                         writer.write(username + ": " + messageToSend);
+                        writer.newLine();
                         writer.flush();
                     }
                 }

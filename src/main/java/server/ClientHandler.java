@@ -54,7 +54,8 @@ public class ClientHandler implements Runnable {
 
     private synchronized void sendString(String message) {
         try {
-            writer.write(message + "\r\n");
+            writer.write(message);
+            writer.newLine();
             writer.flush();
         } catch (IOException exception) {
             closeEverything(socket, reader, writer);
