@@ -37,7 +37,7 @@ public class Server extends SettingsConfigurator implements ClientHandlerObserve
 
     @Override
     public void onMsgReceived(ClientHandler clientHandler, String msg) {
-        System.out.println("Message from " + clientHandler + ": " + msg);
+        System.out.println(msg);
     }
 
     @Override
