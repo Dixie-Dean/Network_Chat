@@ -34,9 +34,10 @@ public class ClientHandler implements Runnable, Disconnection {
                 if (messageFromClient.equals(EXIT)) {
                     disconnectClientHandler();
                     break;
+                } else {
+                    observer.onMsgReceived(this, messageFromClient);
+                    distribute(messageFromClient);
                 }
-                observer.onMsgReceived(this, messageFromClient);
-                distribute(messageFromClient);
             } catch (IOException e) {
                 disconnect(socket, reader, writer);
                 break;

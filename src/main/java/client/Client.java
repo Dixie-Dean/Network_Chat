@@ -43,15 +43,15 @@ public class Client extends SettingsHandler implements Disconnection {
     }
 
     private void sendMessage() {
-        while (socket.isConnected()) {
+        socketLoop: while (socket.isConnected()) {
             try {
                 String messageToSend = SCANNER.nextLine();
                 switch (messageToSend) {
                     case SETTINGS -> displaySettings();
 
                     case EXIT -> {
-                        notifyOfExit();
-                        disconnect(socket, reader, writer);
+                        exit(messageToSend);
+                        break socketLoop;
                     }
 
                     default -> {
@@ -80,11 +80,12 @@ public class Client extends SettingsHandler implements Disconnection {
         }).start();
     }
 
-    private void notifyOfExit() {
+    private void exit(String exitMessage) {
         try {
-            writer.write("/exit");
+            writer.write(exitMessage);
             writer.newLine();
             writer.flush();
+            disconnect(socket, reader, writer);
         } catch (IOException exception) {
             disconnect(socket, reader, writer);
         }
