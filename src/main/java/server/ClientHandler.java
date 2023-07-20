@@ -1,9 +1,11 @@
 package server;
 
+import disconnection.Disconnection;
+
 import java.io.*;
 import java.net.Socket;
 
-public class ClientHandler implements Runnable {
+public class ClientHandler implements Runnable, Disconnection {
     private Socket socket;
     private BufferedReader reader;
     private BufferedWriter writer;
@@ -20,7 +22,7 @@ public class ClientHandler implements Runnable {
             distribute("SERVER: " + clientUsername + " has entered the chat!");
             observer.onConnection(this);
         } catch (IOException exception) {
-            closeEverything(socket, reader, writer);
+            disconnect(socket, reader, writer);
         }
     }
 
@@ -29,10 +31,14 @@ public class ClientHandler implements Runnable {
         while (socket.isConnected()) {
             try {
                 String messageFromClient = reader.readLine();
+                if (messageFromClient.equals(EXIT)) {
+                    disconnectClientHandler();
+                    break;
+                }
                 observer.onMsgReceived(this, messageFromClient);
                 distribute(messageFromClient);
             } catch (IOException e) {
-                closeEverything(socket, reader, writer);
+                disconnect(socket, reader, writer);
                 break;
             }
         }
@@ -47,7 +53,7 @@ public class ClientHandler implements Runnable {
         try {
             return reader.readLine();
         } catch (IOException exception) {
-            closeEverything(socket, reader, writer);
+            disconnect(socket, reader, writer);
         }
         return null;
     }
@@ -58,7 +64,7 @@ public class ClientHandler implements Runnable {
             writer.newLine();
             writer.flush();
         } catch (IOException exception) {
-            closeEverything(socket, reader, writer);
+            disconnect(socket, reader, writer);
         }
     }
 
@@ -70,21 +76,9 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    private void closeEverything(Socket socket, BufferedReader reader, BufferedWriter writer) {
+    private void disconnectClientHandler() {
         observer.onDisconnection(this);
         distribute("SERVER: " + clientUsername + " has left the chat!");
-        try {
-            if (socket != null) {
-                socket.close();
-            }
-            if (reader != null) {
-                reader.close();
-            }
-            if (writer != null) {
-                writer.close();
-            }
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+        disconnect(socket, reader, writer);
     }
 }

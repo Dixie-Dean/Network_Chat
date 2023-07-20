@@ -1,14 +1,14 @@
 package client;
 
+import disconnection.Disconnection;
 import settings.SettingsHandler;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client extends SettingsHandler {
+public class Client extends SettingsHandler implements Disconnection {
     private static final Scanner SCANNER = new Scanner(System.in);
-    private static final String EXIT = "/exit";
     private static final String SETTINGS = "/settings";
     private BufferedReader reader;
     private BufferedWriter writer;
@@ -25,7 +25,7 @@ public class Client extends SettingsHandler {
             receiveMessage();
             sendMessage();
         } catch (IOException exception) {
-            closeEverything(socket, reader, writer);
+            disconnect(socket, reader, writer);
         }
     }
 
@@ -38,7 +38,7 @@ public class Client extends SettingsHandler {
             writer.newLine();
             writer.flush();
         } catch (IOException exception) {
-            closeEverything(socket, reader, writer);
+            disconnect(socket, reader, writer);
         }
     }
 
@@ -49,7 +49,10 @@ public class Client extends SettingsHandler {
                 switch (messageToSend) {
                     case SETTINGS -> displaySettings();
 
-                    case EXIT -> closeEverything(socket, reader, writer);
+                    case EXIT -> {
+                        notifyOfExit();
+                        disconnect(socket, reader, writer);
+                    }
 
                     default -> {
                         writer.write(username + ": " + messageToSend);
@@ -58,7 +61,7 @@ public class Client extends SettingsHandler {
                     }
                 }
             } catch (IOException exception) {
-                closeEverything(socket, reader, writer);
+                disconnect(socket, reader, writer);
             }
         }
     }
@@ -70,26 +73,20 @@ public class Client extends SettingsHandler {
                     String receivedMessage = reader.readLine();
                     System.out.println(receivedMessage);
                 } catch (IOException e) {
-                    closeEverything(socket, reader, writer);
+                    disconnect(socket, reader, writer);
                     break;
                 }
             }
         }).start();
     }
 
-    private void closeEverything(Socket socket, BufferedReader reader, BufferedWriter writer) {
+    private void notifyOfExit() {
         try {
-            if (socket != null) {
-                socket.close();
-            }
-            if (reader != null) {
-                reader.close();
-            }
-            if (writer != null) {
-                writer.close();
-            }
+            writer.write("/exit");
+            writer.newLine();
+            writer.flush();
         } catch (IOException exception) {
-            exception.printStackTrace();
+            disconnect(socket, reader, writer);
         }
     }
 
