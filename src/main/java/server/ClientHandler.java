@@ -7,15 +7,18 @@ public class ClientHandler implements Runnable {
     private Socket socket;
     private BufferedReader reader;
     private BufferedWriter writer;
+    private ClientHandlerObserver observer;
     private String clientUsername;
 
-    public ClientHandler(Socket socket) {
+    public ClientHandler(ClientHandlerObserver observer, Socket socket) {
         try {
             this.socket = socket;
+            this.observer = observer;
             this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             clientUsername = setClientUsername();
-            distribute("SERVER: " + clientUsername + "has entered the chat!");
+            distribute("SERVER: " + clientUsername + " has entered the chat!");
+            observer.onConnection(this);
         } catch (IOException exception) {
             closeEverything(socket, reader, writer);
         }
@@ -26,6 +29,7 @@ public class ClientHandler implements Runnable {
         while (socket.isConnected()) {
             try {
                 String messageFromClient = reader.readLine();
+                observer.onMsgReceived(this, messageFromClient);
                 distribute(messageFromClient);
             } catch (IOException e) {
                 closeEverything(socket, reader, writer);
@@ -36,7 +40,7 @@ public class ClientHandler implements Runnable {
 
     @Override
     public String toString() {
-        return "Port: " + socket.getPort() + " | Username: " + clientUsername;
+        return "(Port: " + socket.getPort() + ") | " + clientUsername;
     }
 
     private String setClientUsername() {
@@ -59,13 +63,20 @@ public class ClientHandler implements Runnable {
 
     private void distribute(String message) {
         for (ClientHandler clientHandler : Server.getClientHandlersList()) {
-            if (clientHandler.clientUsername.equals(this.clientUsername)) {
+            if (!clientHandler.clientUsername.equals(clientUsername)) {
                 clientHandler.sendString(message);
             }
         }
     }
 
+    private void disconnect() {
+        observer.onDisconnection(this);
+        distribute("SERVER: " + clientUsername + "has left the chat!");
+        closeEverything(socket, reader, writer);
+    }
+
     private void closeEverything(Socket socket, BufferedReader reader, BufferedWriter writer) {
+        disconnect();
         try {
             if (socket != null) {
                 socket.close();
