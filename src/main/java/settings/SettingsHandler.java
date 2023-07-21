@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 public abstract class SettingsHandler {
-    protected static final String fileName = "src/main/java/info/settings.txt";
+    protected static final String FILE_NAME = "src/main/java/info/settings.txt";
     protected static final String SETTINGS = "/settings";
 
     protected static int readPort() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             String content;
             while ((content = reader.readLine()) != null) {
                 String[] pair = content.split(Pattern.quote(" | "));
@@ -28,7 +28,7 @@ public abstract class SettingsHandler {
     }
 
     protected static String readHost() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             String content;
             while ((content = reader.readLine()) != null) {
                 String[] pair = content.split(Pattern.quote(" | "));

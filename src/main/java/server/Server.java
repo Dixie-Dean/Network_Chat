@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Server extends SettingsConfigurator implements ClientHandlerObserver {
-    private static final Logger logger = new Logger("src/main/java/info/ServerInfo.txt");
+    private static final Logger LOGGER = new Logger("src/main/java/info/ServerInfo.txt");
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final LinkedList<ClientHandler> CLIENT_HANDLERS = new LinkedList<>();
 
@@ -19,7 +19,7 @@ public class Server extends SettingsConfigurator implements ClientHandlerObserve
         configureSettings(SCANNER);
         try (ServerSocket serverSocket = new ServerSocket(readPort())) {
             System.out.println("Server is running...");
-            logger.log("\nServer is running...");
+            LOGGER.log("\nServer is running...");
 
             while (!serverSocket.isClosed()) {
                 ClientHandler clientHandler = new ClientHandler(this, serverSocket.accept());
@@ -28,7 +28,7 @@ public class Server extends SettingsConfigurator implements ClientHandlerObserve
             }
         } catch (IOException exception) {
             System.out.println("Server IOException: " + exception.getMessage());
-            logger.log("Server IOException: " + exception.getMessage());
+            LOGGER.log("Server IOException: " + exception.getMessage());
         }
     }
 
@@ -47,7 +47,7 @@ public class Server extends SettingsConfigurator implements ClientHandlerObserve
     @Override
     public void onMsgReceived(ClientHandler clientHandler, String msg) {
         System.out.println(getTime() + " | " + msg);
-        logger.log(getTime() + " | " + msg);
+        LOGGER.log(getTime() + " | " + msg);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Server extends SettingsConfigurator implements ClientHandlerObserve
         CLIENT_HANDLERS.add(clientHandler);
         System.out.printf("%s | %s has entered the chat! Clients on server: %d\n",
                 getTime(), clientHandler, CLIENT_HANDLERS.size());
-        logger.log(String.format("%s | %s has entered the chat! Clients on server: %d",
+        LOGGER.log(String.format("%s | %s has entered the chat! Clients on server: %d",
                 getTime(), clientHandler, CLIENT_HANDLERS.size()));
     }
 
@@ -64,7 +64,7 @@ public class Server extends SettingsConfigurator implements ClientHandlerObserve
         CLIENT_HANDLERS.remove(clientHandler);
         System.out.printf("%s | %s has left the chat! Clients on server: %d\n",
                 getTime(), clientHandler, CLIENT_HANDLERS.size());
-        logger.log(String.format("%s | %s has left the chat! Clients on server: %d",
+        LOGGER.log(String.format("%s | %s has left the chat! Clients on server: %d",
                 getTime(), clientHandler, CLIENT_HANDLERS.size()));
     }
 }

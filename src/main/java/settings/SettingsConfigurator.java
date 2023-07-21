@@ -14,7 +14,7 @@ public abstract class SettingsConfigurator extends SettingsHandler {
     }
 
     private void writePort(int port) {
-        try (FileWriter writer = new FileWriter(fileName)) {
+        try (FileWriter writer = new FileWriter(FILE_NAME)) {
             writer.write("Port | " + port + "\n");
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
@@ -22,7 +22,7 @@ public abstract class SettingsConfigurator extends SettingsHandler {
     }
 
     private void writeHost() {
-        try (FileWriter writer = new FileWriter(fileName, true)) {
+        try (FileWriter writer = new FileWriter(FILE_NAME, true)) {
             writer.write("Host | " + HOST + "\n");
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
