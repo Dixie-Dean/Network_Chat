@@ -46,6 +46,6 @@ public abstract class SettingsHandler {
     }
 
     protected static void displaySettings() {
-        System.out.printf("Port: %d, Host: %s", readPort(), readHost());
+        System.out.printf("Port: %d, Host: %s\n", readPort(), readHost());
     }
 }
