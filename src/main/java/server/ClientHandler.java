@@ -74,7 +74,7 @@ public class ClientHandler implements Runnable, Disconnection {
 
     private void distribute(String message) {
         logger.log(message);
-        for (ClientHandler clientHandler : Server.getClientHandlersList()) {
+        for (ClientHandler clientHandler : Server.CLIENT_HANDLERS) {
             if (!clientHandler.clientUsername.equals(clientUsername)) {
                 clientHandler.sendString(message);
             }
