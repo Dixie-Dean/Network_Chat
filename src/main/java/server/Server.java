@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Server extends SettingsConfigurator implements ClientHandlerObserver {
     private static final Logger LOGGER = new Logger("src/main/java/info/ServerInfo.txt");
     private static final Scanner SCANNER = new Scanner(System.in);
-    private static final LinkedList<ClientHandler> CLIENT_HANDLERS = new LinkedList<>();
+    public static final LinkedList<ClientHandler> CLIENT_HANDLERS = new LinkedList<>();
 
     public Server() {
         configureSettings(SCANNER);
@@ -34,10 +34,6 @@ public class Server extends SettingsConfigurator implements ClientHandlerObserve
 
     public static void main(String[] args) {
         new Server();
-    }
-
-    public static List<ClientHandler> getClientHandlersList() {
-        return CLIENT_HANDLERS;
     }
 
     private String getTime() {
