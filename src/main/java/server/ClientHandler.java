@@ -1,11 +1,13 @@
 package server;
 
 import disconnection.Disconnection;
+import logger.Logger;
 
 import java.io.*;
 import java.net.Socket;
 
 public class ClientHandler implements Runnable, Disconnection {
+    private final Logger logger;
     private Socket socket;
     private BufferedReader reader;
     private BufferedWriter writer;
@@ -13,6 +15,7 @@ public class ClientHandler implements Runnable, Disconnection {
     private String clientUsername;
 
     public ClientHandler(ClientHandlerObserver observer, Socket socket) {
+        this.logger = new Logger("src/main/java/info/ChatHistory.txt");
         try {
             this.socket = socket;
             this.observer = observer;
@@ -59,7 +62,7 @@ public class ClientHandler implements Runnable, Disconnection {
         return null;
     }
 
-    private synchronized void sendString(String message) {
+    private void sendString(String message) {
         try {
             writer.write(message);
             writer.newLine();
@@ -70,6 +73,7 @@ public class ClientHandler implements Runnable, Disconnection {
     }
 
     private void distribute(String message) {
+        logger.log(message);
         for (ClientHandler clientHandler : Server.getClientHandlersList()) {
             if (!clientHandler.clientUsername.equals(clientUsername)) {
                 clientHandler.sendString(message);

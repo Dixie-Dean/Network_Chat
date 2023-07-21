@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Server extends SettingsConfigurator implements ClientHandlerObserver {
+    private static final Logger logger = new Logger("src/main/java/info/ServerInfo.txt");
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final LinkedList<ClientHandler> CLIENT_HANDLERS = new LinkedList<>();
-    private final Logger logger = Logger.getInstance();
 
     public Server() {
         configureSettings(SCANNER);

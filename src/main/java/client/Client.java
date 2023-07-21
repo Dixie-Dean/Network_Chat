@@ -14,7 +14,6 @@ public class Client extends SettingsHandler implements Disconnection {
     private Socket socket;
     private String username;
 
-
     private Client() {
         try {
             this.socket = new Socket(readHost(), readPort());
@@ -28,6 +27,11 @@ public class Client extends SettingsHandler implements Disconnection {
         }
     }
 
+    public static void main(String[] args) {
+        Thread clientThread = new Thread(Client::new);
+        clientThread.start();
+    }
+
     private void setUsername() {
         System.out.print("Enter your username, please: ");
         this.username = SCANNER.nextLine();
@@ -36,7 +40,8 @@ public class Client extends SettingsHandler implements Disconnection {
     }
 
     private void sending() {
-        socketLoop: while (socket.isConnected()) {
+        socketLoop:
+        while (socket.isConnected()) {
             String messageToSend = SCANNER.nextLine();
             switch (messageToSend) {
                 case SETTINGS -> displaySettings();
@@ -76,10 +81,5 @@ public class Client extends SettingsHandler implements Disconnection {
     private void exit(String exitMessage) {
         sendMessage(exitMessage);
         disconnect(socket, reader, writer);
-    }
-
-    public static void main(String[] args) {
-        Thread clientThread = new Thread(Client::new);
-        clientThread.start();
     }
 }

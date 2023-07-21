@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 public abstract class SettingsHandler {
-    protected static final String fileName = "src/main/java/settings/settings.txt";
+    protected static final String fileName = "src/main/java/info/settings.txt";
     protected static final String SETTINGS = "/settings";
 
     protected static int readPort() {
