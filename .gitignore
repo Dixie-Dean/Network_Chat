@@ -14,3 +14,4 @@ target/
 *.tar.gz
 *.rar
 /src/main/java/settings/settings.txt
+/src/main/java/info/ServerInfo.txt
