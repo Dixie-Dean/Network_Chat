@@ -7,16 +7,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.time.LocalTime;
 import java.util.LinkedList;
-import java.util.Scanner;
 
 public class Server extends SettingsConfigurator implements ClientHandlerObserver {
     private static final Logger LOGGER = new Logger("src/main/java/info/ServerInfo.txt");
-    private static final Scanner SCANNER = new Scanner(System.in);
     public static final LinkedList<ClientHandler> CLIENT_HANDLERS = new LinkedList<>();
-
-    public Server() {
-        configureSettings(SCANNER);
-    }
 
     public void launch() {
         try (ServerSocket serverSocket = new ServerSocket(readPort())) {

@@ -9,7 +9,7 @@ public abstract class SettingsHandler {
     protected static final String FILE_NAME = "src/main/java/info/settings.txt";
     protected static final String SETTINGS = "/settings";
 
-    protected static int readPort() {
+    protected int readPort() {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             String content;
             while ((content = reader.readLine()) != null) {
@@ -27,7 +27,7 @@ public abstract class SettingsHandler {
         return -1;
     }
 
-    protected static String readHost() {
+    protected String readHost() {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             String content;
             while ((content = reader.readLine()) != null) {
@@ -45,7 +45,7 @@ public abstract class SettingsHandler {
         return null;
     }
 
-    protected static void displaySettings() {
+    protected void displaySettings() {
         System.out.printf("Port: %d, Host: %s\n", readPort(), readHost());
     }
 }
