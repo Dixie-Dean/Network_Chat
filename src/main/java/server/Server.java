@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.time.LocalTime;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Server extends SettingsConfigurator implements ClientHandlerObserver {
@@ -17,10 +16,12 @@ public class Server extends SettingsConfigurator implements ClientHandlerObserve
 
     public Server() {
         configureSettings(SCANNER);
+    }
+
+    public void launch() {
         try (ServerSocket serverSocket = new ServerSocket(readPort())) {
             System.out.println("Server is running...");
             LOGGER.log("\nServer is running...");
-
             while (!serverSocket.isClosed()) {
                 ClientHandler clientHandler = new ClientHandler(this, serverSocket.accept());
                 Thread thread = new Thread(clientHandler);
@@ -30,10 +31,6 @@ public class Server extends SettingsConfigurator implements ClientHandlerObserve
             System.out.println("Server IOException: " + exception.getMessage());
             LOGGER.log("Server IOException: " + exception.getMessage());
         }
-    }
-
-    public static void main(String[] args) {
-        new Server();
     }
 
     private String getTime() {
