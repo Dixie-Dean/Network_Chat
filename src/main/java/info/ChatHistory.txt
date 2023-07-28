@@ -1,0 +1,6 @@
+SERVER: Frank has entered the chat!
+Frank: Hello!
+SERVER: Bob has entered the chat!
+Bob: Hi!
+SERVER: Bob has left the chat!
+SERVER: Frank has left the chat!

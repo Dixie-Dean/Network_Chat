@@ -1,0 +1,7 @@
+Server is running...
+12:48:58 | Port: 59475 | Frank has entered the chat! Clients on server: 1
+12:49:2 | Frank: Hello!
+12:49:13 | Port: 59481 | Bob has entered the chat! Clients on server: 2
+12:49:15 | Bob: Hi!
+12:49:18 | Port: 59481 | Bob has left the chat! Clients on server: 1
+12:49:21 | Port: 59475 | Frank has left the chat! Clients on server: 0
